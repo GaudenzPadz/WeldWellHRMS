@@ -17,6 +17,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.Toolkit;
+
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComponent;
@@ -47,24 +49,6 @@ class GUI extends JFrame {
 
 }
 
-class User {
-
-    static User adminCreds = new User("amin", "admin");
-    static User userCreds = new User("user", "user");
-
-    private final String username;
-    private final String password;
-
-    public User(String username, String password) {
-        this.username = username;
-        this.password = password;
-    }
-
-    public boolean checkCredentials(String inputUsername, String inputPassword) {
-        return username.equals(inputUsername) && password.equals(inputPassword);
-    }
-}
-
 public final class LOGIN extends JPanel {
     
     public final JPanel componentsPanel, welcomePanel;
@@ -74,8 +58,8 @@ public final class LOGIN extends JPanel {
     private final JCheckBox showPassword;
     private final JLabel usernameLabel, passwordLabel, welcomeLabel, subLabel;
     public static JFrame adminFrame = new ADMIN();
-    public final Image img = Toolkit.getDefaultToolkit().getImage("background.jpg");
-
+    public final Image img = Toolkit.getDefaultToolkit().getImage("weldwell/images/background.jpg");
+    
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);

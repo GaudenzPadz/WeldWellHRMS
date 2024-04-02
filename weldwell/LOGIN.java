@@ -17,8 +17,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.Toolkit;
-
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComponent;
@@ -58,8 +56,10 @@ public final class LOGIN extends JPanel {
     private final JCheckBox showPassword;
     private final JLabel usernameLabel, passwordLabel, welcomeLabel, subLabel;
     public static JFrame adminFrame = new ADMIN();
-    public final Image img = Toolkit.getDefaultToolkit().getImage("weldwell/images/background.jpg");
-    
+    public final Image img = Toolkit.getDefaultToolkit()
+                                    .getImage("weldwell/images/background.jpg")
+                                    .getScaledInstance(400, 650,Image.SCALE_DEFAULT);
+
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -251,6 +251,7 @@ public final class LOGIN extends JPanel {
         JButton logout = new JButton("Logout");
         logout.addActionListener((ActionEvent e)
                 -> {
+                    
             adminFrame.dispose();
             Main.loginGUI.revalidate();
             Main.loginGUI.repaint();

@@ -35,7 +35,7 @@ public class LIST {
     private static JTable table;
     private static JPopupMenu popupMenu;
     private static JMenuItem menuItemAdd, menuItemRemove;
-    public static final String FILE_NAME = "data.b2b";
+    public static final String FILE_NAME = "data.csv";
     public static final Map<String, String> workTypeMap = new HashMap<>();
 
     @SuppressWarnings("rawtypes")

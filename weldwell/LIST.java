@@ -70,19 +70,19 @@ public class LIST {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public final void workType(TableColumn column) {
 
-        workTypeMap.put("Shielded metal arc welding", "SMAW");
-        workTypeMap.put("Gas tungsten arc welding", "GTAW");
-        workTypeMap.put("Gas metal arc welding", "GAS");
-        workTypeMap.put("Plasma arc welding", "PLAS");
-        workTypeMap.put("ARC", "ARC");
+        workTypeMap.put("Shielded Metal Arc Welding", "SMAW");
+        workTypeMap.put("Gas Tungsten Arc Welding", "GTAW");
+        workTypeMap.put("Flux-cored Arc Welding", "FCAW");
+        workTypeMap.put("Gas Metal Arc Welding", "GMAW");
+        workTypeMap.put("Manager", "CEO");
         workTypeMap.put("Other", "DEV");
 
         comboBox = new JComboBox();
         comboBox.addItem(getKeyFromValue(workTypeMap, "SMAW"));
         comboBox.addItem(getKeyFromValue(workTypeMap, "GTAW"));
-        comboBox.addItem(getKeyFromValue(workTypeMap, "GAS"));
-        comboBox.addItem(getKeyFromValue(workTypeMap, "PLAS"));
-        comboBox.addItem(getKeyFromValue(workTypeMap, "ARC"));
+        comboBox.addItem(getKeyFromValue(workTypeMap, "FCAW"));
+        comboBox.addItem(getKeyFromValue(workTypeMap, "GMAW"));
+        comboBox.addItem(getKeyFromValue(workTypeMap, "CEO"));
         comboBox.addItem(getKeyFromValue(workTypeMap, "DEV"));
         column.setCellEditor(new DefaultCellEditor(comboBox));
 

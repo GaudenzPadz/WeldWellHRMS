@@ -14,56 +14,36 @@ import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
-import java.awt.Toolkit;
+
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import javax.swing.JComponent;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
-class GUI extends JFrame {
-
-    public GUI(String title, JComponent contentPanel, int width, int height, boolean resize, boolean visible) {
-
-        setSize(width, height);
-        setTitle(title);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setResizable(resize);
-
-        setLocationRelativeTo(null); // Center on screen
-
-        //frame.setUndecorated(true);
-        // frame.setShape(new RoundRectangle2D.Double(10, 10, 100, 100, 50, 50));
-        setContentPane(contentPanel);
-        setVisible(visible);
-
-    }
-
-}
 
 public final class LOGIN extends JPanel {
-    
+
     public final JPanel componentsPanel, welcomePanel;
     private final JButton loginButton;
     private final JTextField email;
     private final JPasswordField password;
     private final JCheckBox showPassword;
     private final JLabel usernameLabel, passwordLabel, welcomeLabel, subLabel;
-    public static JFrame adminFrame = new ADMIN();
-    public final Image img = Toolkit.getDefaultToolkit()
-                                    .getImage("weldwell/images/background.jpg")
-                                    .getScaledInstance(400, 650,Image.SCALE_DEFAULT);
+
+    public final ImageIcon icon = new ImageIcon(getClass().getResource("/image.png"));
+    public final Image bg = icon.getImage().getScaledInstance(400, 650, Image.SCALE_DEFAULT);
 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        g.drawImage(img, 0, 0, this);
+        g.drawImage(bg, 0, 0, this);
 
     }
 
@@ -100,7 +80,7 @@ public final class LOGIN extends JPanel {
         input.gridy = 6;
         componentsPanel.add(loginButton, input);
 
-        //add title and components to frame
+        // add title and components to frame
         setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
@@ -110,8 +90,6 @@ public final class LOGIN extends JPanel {
         gbc.gridy = 1;
         add(componentsPanel, gbc);
 
-        setSize(370, 650);
-
     }
 
     public void addEventListeners() {
@@ -119,7 +97,7 @@ public final class LOGIN extends JPanel {
             if (showPassword.isSelected()) {
                 password.setEchoChar((char) 0);
                 password.setForeground(Color.BLACK);
-                
+
             } else {
                 password.setEchoChar('*');
             }
@@ -128,7 +106,7 @@ public final class LOGIN extends JPanel {
         loginButton.addActionListener((ActionEvent e) -> {
             String username = email.getText();
             String pass = new String(password.getPassword());
-            
+
             processLogin(username, pass);
         });
 
@@ -140,6 +118,7 @@ public final class LOGIN extends JPanel {
                     email.setForeground(Color.gray);
                 }
             }
+
             @Override
             public void focusGained(FocusEvent e) {
                 if (email.getText().equals("Enter your email")) {
@@ -177,7 +156,8 @@ public final class LOGIN extends JPanel {
 
     public final User admin;
     public final User user;
-    //private User[] users;
+
+    // private User[] users;
     public LOGIN(User admin, User user) {
         this.admin = admin;
         this.user = user;
@@ -193,10 +173,10 @@ public final class LOGIN extends JPanel {
         componentsPanel = new JPanel(new GridBagLayout());
 
         usernameLabel = new JLabel("Username:", JLabel.LEFT);
-        email = new COMPONENTS.round(26);
+        email = new GUI.round(26);
 
         passwordLabel = new JLabel("Password:", JLabel.LEFT);
-        password = new COMPONENTS.roundPass(26);
+        password = new GUI.roundPass(26);
         showPassword = new JCheckBox("Show Password");
 
         loginButton = new JButton("Login");
@@ -226,37 +206,33 @@ public final class LOGIN extends JPanel {
 
         // frame.setUndecorated(true);
         // frame.setShape(new RoundRectangle2D.Double(10, 10, 100, 100, 50, 50));
-        //COMPONENTS.GUI("Login", LOGIN.this, 400, 650, false, true);
     }
 
     public static void processLogin(String inputUsername, String inputPassword) {
+        // credentials
         User adminUser = new User("admin", "admin");
         User regularUser = new User("user", "user");
 
         if (adminUser.checkCredentials(inputUsername, inputPassword)) {
             Main.loginGUI.dispose();
-            adminFrame.setVisible(true);
+
+            Main.loginGUI.removeAll();
+
+            Main.adminGUI = new GUI("Admin", Main.adminPanel, 1000, 700, true, true);
 
         } else if (regularUser.checkCredentials(inputUsername, inputPassword)) {
             Main.loginGUI.dispose();
-
-            //UserPanel.userPanel();
+            // userGui = new GUI("Employee", userPanel, 1000, 700, true, true);
+            Main.userGui = new GUI("Employee", Main.userPanel, 1000, 700, true, true);
         } else {
             JOptionPane.showMessageDialog(null, "Invalid username or password");
         }
     }
 
-    public static JPanel logoutPanel() {
+    public static JPanel logoutPanel(ActionListener e) {
         JPanel logoutPanel = new JPanel();
         JButton logout = new JButton("Logout");
-        logout.addActionListener((ActionEvent e)
-                -> {
-                    
-            adminFrame.dispose();
-            Main.loginGUI.revalidate();
-            Main.loginGUI.repaint();
-            Main.loginGUI.setVisible(true);
-        });
+        logout.addActionListener(e);
         logoutPanel.add(logout);
         return logoutPanel;
     }

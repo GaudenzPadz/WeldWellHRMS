@@ -1,7 +1,7 @@
 package weldwell;
 
 /*
- * REFERANCE: https://www.tutorialspoint.com/how-to-implement-the-search-functionality-of-a-jtable-in-java#:~:text=We%20can%20implement%20the%20search,a%20JTextField%20to%20implement%20it.
+ * REFERENCE: https://www.tutorialspoint.com/how-to-implement-the-search-functionality-of-a-jtable-in-java#:~:text=We%20can%20implement%20the%20search,a%20JTextField%20to%20implement%20it.
  * https://www.codejava.net/java-se/swing/jtable-popup-menu-example
  * https://stackoverflow.com/questions/2452694/jtable-with-horizontal-scrollbar
  */
@@ -38,36 +38,30 @@ public class LIST {
     public static final String FILE_NAME = "data.csv";
     public static final Map<String, String> workTypeMap = new HashMap<>();
 
-    @SuppressWarnings("rawtypes")
-    public static JComboBox comboBox;
+    public static JComboBox<String> comboBox;
     public JScrollPane scrollPane;
     public JPanel searchPanel;
     // Create column names
-    private String[] column = {"ID", "First Name", "Last Name", "Address", "Work Type", "Rate", "Gross Pay", "Net Pay"};
+    private String[] column = { "ID", "First Name", "Last Name", "Address", "Work Type", "Rate", "Gross Pay",
+            "Net Pay" };
 
-    /**
-     * javadoc - a documentation about the code
-     *
-     * @param model
-     */
     public void reloadData(DefaultTableModel model) {
         System.out.println("RELOADED");
         model.setRowCount(0); // Clear existing data in the table model
         for (Employee employee : Employee.getEmployees()) {
-            model.addRow(new Object[]{
-                employee.getId(),
-                employee.getFirstName(),
-                employee.getLastName(),
-                employee.getAddress(),
-                employee.getWorkType(),
-                employee.getRate(),
-                Employee.calculateGrossPay(employee.getRate()), // Calculate gross pay
-                Employee.calculateNetPay(employee.getRate()) // Calculate net pay 
+            model.addRow(new Object[] {
+                    employee.getId(),
+                    employee.getFirstName(),
+                    employee.getLastName(),
+                    employee.getAddress(),
+                    employee.getWorkType(),
+                    employee.getRate(),
+                    // Employee.calculateGrossPay(employee.getRate()), // Calculate gross pay
+                    Employee.calculateNetPay(employee.getRate()) // Calculate net pay
             });
         }
     }
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
     public final void workType(TableColumn column) {
 
         workTypeMap.put("Shielded Metal Arc Welding", "SMAW");
@@ -77,23 +71,23 @@ public class LIST {
         workTypeMap.put("Manager", "CEO");
         workTypeMap.put("Other", "DEV");
 
-        comboBox = new JComboBox();
-        comboBox.addItem(getKeyFromValue(workTypeMap, "SMAW"));
-        comboBox.addItem(getKeyFromValue(workTypeMap, "GTAW"));
-        comboBox.addItem(getKeyFromValue(workTypeMap, "FCAW"));
-        comboBox.addItem(getKeyFromValue(workTypeMap, "GMAW"));
-        comboBox.addItem(getKeyFromValue(workTypeMap, "CEO"));
-        comboBox.addItem(getKeyFromValue(workTypeMap, "DEV"));
+        comboBox = new JComboBox<>();
+        comboBox.addItem((String) getKeyFromValue(workTypeMap, "SMAW"));
+        comboBox.addItem((String) getKeyFromValue(workTypeMap, "GTAW"));
+        comboBox.addItem((String) getKeyFromValue(workTypeMap, "FCAW"));
+        comboBox.addItem((String) getKeyFromValue(workTypeMap, "GMAW"));
+        comboBox.addItem((String) getKeyFromValue(workTypeMap, "CEO"));
+        comboBox.addItem((String) getKeyFromValue(workTypeMap, "DEV"));
         column.setCellEditor(new DefaultCellEditor(comboBox));
 
-        //Set up tool tips for the sport cells.
+        // Set up tool tips for the sport cells.
         DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();
         renderer.setToolTipText("Click to Choose Work Type");
         column.setCellRenderer(renderer);
     }
 
     @SuppressWarnings("rawtypes")
-    public static Object getKeyFromValue( Map hm, Object value) {
+    public static Object getKeyFromValue(Map hm, Object value) {
         for (Object o : hm.keySet()) {
             if (hm.get(o).equals(value)) {
                 return o;
@@ -112,7 +106,7 @@ public class LIST {
 
         if (searchText.trim().length() == 0) {
             sorter.setRowFilter(null);
-            Employee.loadData(FILE_NAME);
+            FileHand.loadData(FILE_NAME);
 
         } else {
             sorter.setRowFilter(RowFilter.regexFilter("(?i)" + searchText));
@@ -156,7 +150,7 @@ public class LIST {
         String generatedId = workTypeAbbreviation + String.format("%03d", newId);
 
         // Add a new row with the generated ID
-        //model.addRow(new Object[]{generatedId, "", "", "", workType, 0.0, 0.0, 0.0});
+        // model.addRow(new Object[]{generatedId, "", "", "", workType, 0.0, 0.0, 0.0});
         // Create a new employee
         Employee employee = new Employee(generatedId, "", "", "", workType, 0.0, 0.0, 0.0);
 
@@ -172,22 +166,21 @@ public class LIST {
 
         menuItemAdd.addActionListener((ActionEvent e) -> {
             idGeneration(table, model);
-            Employee.loadData(FILE_NAME);
+            FileHand.loadData(FILE_NAME);
             reloadData(model);
         });
 
-        // ... existing code for remove action listener ...
         popupMenu.add(menuItemAdd);
         popupMenu.add(menuItemRemove);
 
         menuItemRemove.addActionListener((ActionEvent e) -> {
             int rowIndex = table.getSelectedRow();
-            
+
             if (rowIndex < 0) {
                 System.out.println("No row selected"); // For debugging
-                return;  // Exit if no row is selected
+                return; // Exit if no row is selected
             }
-            
+
             Employee.removeEmployee(table);
             reloadData(model);
         });
@@ -214,10 +207,11 @@ public class LIST {
         columnModel.getColumn(5).setPreferredWidth(100);
         columnModel.getColumn(6).setPreferredWidth(100);
         columnModel.getColumn(7).setPreferredWidth(100);
-        //table.setToolTipText("Edit"); //floating text("edit") on the table when inactive 
+        // table.setToolTipText("Edit"); //floating text("edit") on the table when
+        // inactive
         table.setCellSelectionEnabled(true);
         table.setFont(new Font("Serif", Font.PLAIN, 18));
-        //table.setPreferredSize(new Dimension(1000, 500));
+        // table.setPreferredSize(new Dimension(1000, 500));
         table.setRowHeight(40);
     }
 
@@ -230,16 +224,14 @@ public class LIST {
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 // Make all cells editable except the first row ID[0], Rate[5], Gross[6], Net[7]
 
-                boolean[] columnEditables = new boolean[]{
-                    false, true, true, true, true, false, false, false
+                boolean[] columnEditables = new boolean[] {
+                        false, true, true, true, true, false, false, false
                 };
                 return columnEditables[columnIndex];
-
-                //return columnIndex != 0 || columnIndex != 5|| columnIndex != 6 || columnIndex != 7; 
             }
         };
 
-        //create a JTable
+        // create a JTable
         table = new JTable(model);
         table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         workType(table.getColumnModel().getColumn(4));
@@ -248,9 +240,9 @@ public class LIST {
         table.addFocusListener(new FocusAdapter() {
             @Override
             public void focusLost(FocusEvent e) {
-                //when focus is lost?
-                Employee.saveDataToFile(FILE_NAME);
-                //Save data
+                // when focus is lost?
+                FileHand.saveDataToFile(FILE_NAME);
+                // Save data
             }
         });
 
@@ -258,12 +250,12 @@ public class LIST {
 
         tableDesign();
 
-        Employee.loadData(FILE_NAME);
+        FileHand.loadData(FILE_NAME);
         // Add JTable to a scroll pane
         scrollPane = new JScrollPane(table);
         // frame.add(scrollPane, BorderLayout.CENTER);
 
-        //create a panel for search
+        // create a panel for search
         searchPanel = new JPanel();
         JTextField searchField = new JTextField(20);
         searchField.getDocument().addDocumentListener(new DocumentListener() {
@@ -290,7 +282,7 @@ public class LIST {
 
             @Override
             public void changedUpdate(DocumentEvent e) {
-                //I DONT KNOW THE USE OF THIS ONE
+                // I DONT KNOW THE USE OF THIS ONE
             }
         });
         searchPanel.add(new JLabel("Search: "));

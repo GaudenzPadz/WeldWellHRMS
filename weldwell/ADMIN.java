@@ -9,12 +9,11 @@ import java.awt.event.ActionListener;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
-public class ADMIN extends JFrame {
+public class ADMIN extends JPanel {
 
     public static JPanel contentPanel(JPanel panel) {
 
@@ -35,7 +34,7 @@ public class ADMIN extends JFrame {
         textPanel.setLayout(
                 new GridLayout(2, 1)); // Grid layout with 2 rows and 1 column
 
-        title.setFont(new Font("Sans Serif", Font.BOLD, 20));  // Customize font
+        title.setFont(new Font("Sans Serif", Font.BOLD, 20)); // Customize font
 
         JLabel label2 = new JLabel("HRMS for a Welding Shop");
 
@@ -68,25 +67,24 @@ public class ADMIN extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 welcome.removeAll(); // Remove existing components
                 welcome.revalidate(); // Revalidate for layout changes
-                //make an object LIST to call out its methods
+                // make an object LIST to call out its methods
                 LIST empList = new LIST();
 
                 // Reload when button clicked again
                 empList.reloadData(LIST.model);
-                Employee.loadData(LIST.FILE_NAME);
-                //add panels to the contentPanel
+                FileHand.loadData(LIST.FILE_NAME);
+                // add panels to the contentPanel
                 welcome.add(empList.searchPanel, BorderLayout.NORTH);
                 welcome.add(empList.scrollPane, BorderLayout.SOUTH);
                 welcome.repaint();
             }
         });
 
-        //button actionlistener with lambda expression 
-        button5.addActionListener((ActionEvent e)
-                -> {
-//            contentPanel().removeAll(); // Remove existing components
-//            contentPanel().revalidate(); // Revalidate for layout changes
-//            contentPanel().repaint();
+        // button actionlistener with lambda expression
+        button5.addActionListener((ActionEvent e) -> {
+            // contentPanel().removeAll(); // Remove existing components
+            // contentPanel().revalidate(); // Revalidate for layout changes
+            // contentPanel().repaint();
 
         });
 
@@ -105,8 +103,22 @@ public class ADMIN extends JFrame {
         sidePanel.add(TITLE(), BorderLayout.NORTH);
 
         sidePanel.add(BUTTONS(), BorderLayout.CENTER);
+        ActionListener logoutListener = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Implement context-specific logic for frame disposal
+                // userGui.dispose(); // Or adminGUI.dispose();
+                Main.adminGUI.dispose();
 
-        sidePanel.add(LOGIN.logoutPanel(), BorderLayout.SOUTH);
+                // revalidate loginGUI
+                Main.loginGUI = new GUI("Login", Main.loginFrame, 400, 650, false, true);
+                Main.loginGUI.revalidate();
+                Main.loginGUI.repaint();
+                Main.loginGUI.setVisible(true);
+            }
+        };
+
+        sidePanel.add(LOGIN.logoutPanel(logoutListener), BorderLayout.SOUTH);
         sidePanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 10)); // Add some padding
 
         return sidePanel;
@@ -136,19 +148,12 @@ public class ADMIN extends JFrame {
     JPanel welcome = contentPanel(welcomeScreen());
 
     public ADMIN() {
-        setTitle("Admin");
-        setMinimumSize(new Dimension(800, 500));
-        
-        setSize(1000, 700);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        // Set the content pane
-        JPanel mainPanel = new JPanel(new BorderLayout());
-        mainPanel.add(SIDE_MENU(), BorderLayout.WEST);
-        mainPanel.add(welcome, BorderLayout.CENTER);
+        setLayout(new BorderLayout());
+        add(SIDE_MENU(), BorderLayout.WEST);
+        add(welcome, BorderLayout.CENTER);
 
-        mainPanel.setBorder(BorderFactory.createEmptyBorder(2, 5, 2, 5)); // Add some padding
-        setContentPane(mainPanel);
+        setBorder(BorderFactory.createEmptyBorder(2, 5, 2, 5)); // Add some padding
 
     }
 

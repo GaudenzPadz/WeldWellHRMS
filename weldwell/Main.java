@@ -2,9 +2,17 @@ package weldwell;
 
 public class Main {
 
-    static GUI loginGUI;
     public static LOGIN loginFrame;
-    
+    public static GUI loginGUI;
+   
+    //userpanel Object and   
+    public static userGui userPanel = new userGui();
+    public static GUI userGui;
+
+    //Admin GUI Object and ADMIN object
+    public static ADMIN adminPanel = new ADMIN();
+    public static GUI adminGUI;
+
     public static void main(String[] args) {
         loginFrame = new LOGIN(User.adminCreds, User.userCreds);
         loginFrame.componentsPanel.setOpaque(false);

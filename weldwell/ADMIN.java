@@ -72,7 +72,7 @@ public class ADMIN extends JPanel {
 
                 // Reload when button clicked again
                 empList.reloadData(LIST.model);
-                FileHand.loadData(LIST.FILE_NAME);
+                FileHand.loadData(Main.FILE_NAME);
                 // add panels to the contentPanel
                 welcome.add(empList.searchPanel, BorderLayout.NORTH);
                 welcome.add(empList.scrollPane, BorderLayout.SOUTH);

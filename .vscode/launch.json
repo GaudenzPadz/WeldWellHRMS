@@ -1,0 +1,77 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "userGui",
+            "request": "launch",
+            "mainClass": "weldwell.userGui",
+            "projectName": "WeldWellHRMS_11171b33"
+        },
+        {
+            "type": "java",
+            "name": "Current File",
+            "request": "launch",
+            "mainClass": "${file}"
+        },
+        {
+            "type": "java",
+            "name": "Employee",
+            "request": "launch",
+            "mainClass": "weldwell.Employee",
+            "projectName": "WeldWellHRMS_11171b33"
+        },
+        {
+            "type": "java",
+            "name": "FIleHand",
+            "request": "launch",
+            "mainClass": "weldwell.FileHand",
+            "projectName": "WeldWellHRMS_11171b33"
+        },
+        {
+            "type": "java",
+            "name": "GUI",
+            "request": "launch",
+            "mainClass": "weldwell.GUI",
+            "projectName": "WeldWellHRMS_11171b33"
+        },
+        {
+            "type": "java",
+            "name": "LIST",
+            "request": "launch",
+            "mainClass": "weldwell.LIST",
+            "projectName": "WeldWellHRMS_11171b33"
+        },
+        {
+            "type": "java",
+            "name": "LOGIN",
+            "request": "launch",
+            "mainClass": "weldwell.LOGIN",
+            "projectName": "WeldWellHRMS_11171b33"
+        },
+        {
+            "type": "java",
+            "name": "Main",
+            "request": "launch",
+            "mainClass": "weldwell.Main",
+            "projectName": "WeldWellHRMS_11171b33"
+        },
+        {
+            "type": "java",
+            "name": "User",
+            "request": "launch",
+            "mainClass": "weldwell.User",
+            "projectName": "WeldWellHRMS_11171b33"
+        },
+        {
+            "type": "java",
+            "name": "USERPANEL",
+            "request": "launch",
+            "mainClass": "weldwell.USERPANEL",
+            "projectName": "WeldWellHRMS_11171b33"
+        }
+    ]
+}

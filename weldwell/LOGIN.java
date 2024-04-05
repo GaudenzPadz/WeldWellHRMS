@@ -209,18 +209,15 @@ public final class LOGIN extends JPanel {
     }
 
     public static void processLogin(String inputUsername, String inputPassword) {
-        // credentials
-        User adminUser = new User("admin", "admin");
-        User regularUser = new User("user", "user");
 
-        if (adminUser.checkCredentials(inputUsername, inputPassword)) {
+        if (Main.adminUser.checkCredentials(inputUsername, inputPassword)) {
             Main.loginGUI.dispose();
 
             Main.loginGUI.removeAll();
 
             Main.adminGUI = new GUI("Admin", Main.adminPanel, 1000, 700, true, true);
 
-        } else if (regularUser.checkCredentials(inputUsername, inputPassword)) {
+        } else if (Main.regularUser.checkCredentials(inputUsername, inputPassword)) {
             Main.loginGUI.dispose();
             // userGui = new GUI("Employee", userPanel, 1000, 700, true, true);
             Main.userGui = new GUI("Employee", Main.userPanel, 1000, 700, true, true);

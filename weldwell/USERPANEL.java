@@ -1,5 +1,4 @@
 package weldwell;
-
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -9,18 +8,20 @@ import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.Calendar;
-import java.util.HashMap;
-import javax.imageio.ImageIO;
 
+import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
+import javax.swing.ButtonGroup;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JFrame;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
@@ -28,104 +29,12 @@ import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
-import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
-import javax.swing.ButtonGroup;
-import javax.swing.ImageIcon;
-import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-public class USERPANEL extends JFrame {
-
-    // Constants for deduction rates
-    static final double SSS_RATE = 0.10; // Example rate for SSS
-    static final double PAG_IBIG_RATE = 0.05; // Example rate for Pag-IBIG
-    static final double PHILHEALTH_RATE = 0.03; // Example rate for PhilHealth
-
-    // Constants for work types and their corresponding wage per day
-    static final double SMAW_WAGE = 500;
-    static final double GTAW_WAGE = 900;
-    static final double FCAW_WAGE = 900;
-    static final double GMAW_WAGE = 1000;
-
-    // Employee details
-    private static String employeeName;
-    private static String employeeId;
-
-    private static JComboBox<String> workTypeComboBox;
-    private static JTextField daysWorkedTextField;
-    private static JTextArea resultTextArea;
-
-    public USERPANEL() {
-
-    }
-
-    // Method to save employee details
-
-    // Method to calculate deductions
-    private static double calculateDeductions(double grossPay) {
-        double sssDeduction = grossPay * SSS_RATE;
-        double pagIbigDeduction = grossPay * PAG_IBIG_RATE;
-        double philHealthDeduction = grossPay * PHILHEALTH_RATE;
-        return sssDeduction + pagIbigDeduction + philHealthDeduction;
-    }
-
-    // Method to calculate gross pay
-    private static double calculateGrossPay(double daysWorked, double wagePerDay) {
-        return daysWorked * wagePerDay;
-    }
-
-    // Method to calculate net pay
-    private static double calculateNetPay(double grossPay, double deductions) {
-        return grossPay - deductions;
-    }
-
-    // Method to perform calculation when the Calculate button is clicked
-    public static void calculate() {
-        String workType = (String) workTypeComboBox.getSelectedItem();
-        int daysWorked = Integer.parseInt(daysWorkedTextField.getText());
-
-        double wagePerDay;
-        switch (workType) {
-            case "SMAW":
-                wagePerDay = SMAW_WAGE;
-                break;
-            case "GTAW":
-                wagePerDay = GTAW_WAGE;
-                break;
-            case "FCAW":
-                wagePerDay = FCAW_WAGE;
-                break;
-            case "GMAW":
-                wagePerDay = GMAW_WAGE;
-                break;
-            default:
-                wagePerDay = SMAW_WAGE;
-        }
-
-        double grossPay = calculateGrossPay(daysWorked, wagePerDay);
-        double deductions = calculateDeductions(grossPay);
-        double netPay = calculateNetPay(grossPay, deductions);
-
-        // Display the results in the text area
-        resultTextArea.setText("Employee Name: " + employeeName + "\n"
-                + "Employee ID: " + employeeId + "\n"
-                + "Gross Pay: " + grossPay + "\n"
-                + "Deductions: " + deductions + "\n"
-                + "Net Pay: " + netPay);
-    }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                new USERPANEL().setVisible(true);
-            }
-        });
-    }
-}
-
+// calendar
 final class MonthPanel extends JPanel {
 
     private final int month;
@@ -214,7 +123,7 @@ final class MonthPanel extends JPanel {
     }
 }
 
-class userGui extends JPanel implements Runnable {
+public class USERPANEL extends JPanel implements Runnable {
 
     private JTable attendanceTable;
     private JCheckBox overtimeCheckBox;
@@ -228,7 +137,8 @@ class userGui extends JPanel implements Runnable {
 
     private MonthPanel panel;
     private User user;
-
+    private Employee employee; 
+    
     @Override
     public void run() {
         setMonthPanel(); // Initialize the panel
@@ -236,6 +146,45 @@ class userGui extends JPanel implements Runnable {
         repaint();
     }
 
+    public USERPANEL() {
+        FileHand.loadData(Main.FILE_NAME);
+        employee = FileHand.getEmployeeById("DEV001");
+
+        setMonthPanel(); 
+        setSize(932, 572);
+        setLayout(new BorderLayout(10, 10));
+
+        JPanel userInfoPanel = createUserInfoPanel();
+        add(userInfoPanel, BorderLayout.WEST);
+
+        attendancePanel = createAttendancePanel();
+        add(attendancePanel, BorderLayout.CENTER);
+
+        JPanel payrollPanel = createPayrollPanel();
+        add(payrollPanel, BorderLayout.EAST);
+
+        JPanel summaryPanel = createSummaryPanel();
+        add(summaryPanel, BorderLayout.NORTH);
+
+        ActionListener logoutListener = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Implement context-specific logic for frame disposal
+                // userGui.dispose(); // Or adminGUI.dispose();
+                Main.userGui.dispose();
+
+                // revalidate loginGUI
+                Main.loginGUI = new GUI("Login", Main.loginFrame, 400, 650, false, true);
+                Main.loginGUI.revalidate();
+                Main.loginGUI.repaint();
+                Main.loginGUI.setVisible(true);
+            }
+        };
+
+        add(LOGIN.logoutPanel(logoutListener), BorderLayout.SOUTH);
+    }
+
+    
     private JPanel createUserInfoPanel() {
         JPanel userInfoPanel = new JPanel();
         userInfoPanel.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED), "User Information"));
@@ -264,11 +213,11 @@ class userGui extends JPanel implements Runnable {
                 try {
                     Image img = ImageIO.read(selectedFile);
                     // Resize the image to fit the label
-                    ImageIcon icon = new ImageIcon(img.getScaledInstance(100, 100, Image.SCALE_SMOOTH));
+                    ImageIcon icon = new ImageIcon(img.getScaledInstance(100, 100, Image.SCALE_FAST));
                     profilePicture.setText("");
                     profilePicture.setIcon(icon);
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    JOptionPane.showMessageDialog(null, "Error creating sample data file: " + e.getMessage());
                 }
             }
         });
@@ -281,19 +230,28 @@ class userGui extends JPanel implements Runnable {
         // Labels and Text Fields
         userInfoSub.add(new JLabel("ID : "));
         idField = new JTextField();
+        idField.setText(employee.getId());
+
         userInfoSub.add(idField);
         userInfoSub.add(new JLabel("First Name : "));
         firstNameField = new JTextField();
+        firstNameField.setText(employee.getFirstName());
         userInfoSub.add(firstNameField);
+
         userInfoSub.add(new JLabel("Middle Name:"));
         middleNameField = new JTextField();
         userInfoSub.add(middleNameField);
+        // middleNameField.setText(employee.getMiddleName());
+
         userInfoSub.add(new JLabel("Last Name :"));
         lastNameField = new JTextField();
+        lastNameField.setText(employee.getLastName());
         userInfoSub.add(lastNameField);
+
         userInfoSub.add(new JLabel("Work Type :"));
         workTypeField = new JTextField();
         workTypeField.setEditable(false);
+        workTypeField.setText(employee.getWorkType());
         userInfoSub.add(workTypeField);
 
         // Other Information Subpanel
@@ -304,12 +262,15 @@ class userGui extends JPanel implements Runnable {
         otherInfo.add(new JLabel("Address : "));
         addressField = new JTextField();
         otherInfo.add(addressField);
+
         otherInfo.add(new JLabel("Tel. Number : "));
         telNumField = new JTextField();
         otherInfo.add(telNumField);
+
         otherInfo.add(new JLabel("Email : "));
         emailField = new JTextField();
         otherInfo.add(emailField);
+
         otherInfo.add(new JLabel("Gender : "));
 
         // Gender Radio Buttons
@@ -549,24 +510,7 @@ class userGui extends JPanel implements Runnable {
         return summary;
     }
 
-    public userGui() {
-        setMonthPanel(); // Initialize the panel
-        //setTitle("Employee Panel");
-        setSize(932, 572);
-          setLayout(new BorderLayout(10, 10));
-
-        JPanel userInfoPanel = createUserInfoPanel();
-          add(userInfoPanel, BorderLayout.WEST);
-
-        attendancePanel = createAttendancePanel();
-          add(attendancePanel, BorderLayout.CENTER);
-
-        JPanel payrollPanel = createPayrollPanel();
-          add(payrollPanel, BorderLayout.EAST);
-
-        JPanel summaryPanel = createSummaryPanel();
-          add(summaryPanel, BorderLayout.NORTH);
-    }
+  
 
     private void setMonthPanel() {
         Calendar calendar = Calendar.getInstance();
@@ -577,4 +521,5 @@ class userGui extends JPanel implements Runnable {
         panel = new MonthPanel(month, year, user); // Initialize panel here
 
     }
+
 }

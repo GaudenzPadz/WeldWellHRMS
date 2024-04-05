@@ -35,7 +35,6 @@ public class LIST {
     private static JTable table;
     private static JPopupMenu popupMenu;
     private static JMenuItem menuItemAdd, menuItemRemove;
-    public static final String FILE_NAME = "data.csv";
     public static final Map<String, String> workTypeMap = new HashMap<>();
 
     public static JComboBox<String> comboBox;
@@ -56,8 +55,8 @@ public class LIST {
                     employee.getAddress(),
                     employee.getWorkType(),
                     employee.getRate(),
-                    // Employee.calculateGrossPay(employee.getRate()), // Calculate gross pay
-                    Employee.calculateNetPay(employee.getRate()) // Calculate net pay
+                    Employee.calculateGrossPay(5,employee.getRate()), // Calculate gross pay
+                    Employee.calculateNetPay(0,employee.getRate()) // Calculate net pay
             });
         }
     }
@@ -106,7 +105,7 @@ public class LIST {
 
         if (searchText.trim().length() == 0) {
             sorter.setRowFilter(null);
-            FileHand.loadData(FILE_NAME);
+            FileHand.loadData(Main.FILE_NAME);
 
         } else {
             sorter.setRowFilter(RowFilter.regexFilter("(?i)" + searchText));
@@ -150,12 +149,15 @@ public class LIST {
         String generatedId = workTypeAbbreviation + String.format("%03d", newId);
 
         // Add a new row with the generated ID
-        // model.addRow(new Object[]{generatedId, "", "", "", workType, 0.0, 0.0, 0.0});
-        // Create a new employee
-        Employee employee = new Employee(generatedId, "", "", "", workType, 0.0, 0.0, 0.0);
+        Employee employee = new Employee(
+            generatedId,
+             "", "", "",
+                workType,
+                 0.0, 0.0, 0.0,
+                  "");
 
         // Add the employee to the employee manager
-        Employee.addEmployee(employee, FILE_NAME);
+        Employee.addEmployee(employee, Main.FILE_NAME);
     }
 
     private void popupMenu() {
@@ -166,7 +168,7 @@ public class LIST {
 
         menuItemAdd.addActionListener((ActionEvent e) -> {
             idGeneration(table, model);
-            FileHand.loadData(FILE_NAME);
+            FileHand.loadData(Main.FILE_NAME);
             reloadData(model);
         });
 
@@ -241,7 +243,7 @@ public class LIST {
             @Override
             public void focusLost(FocusEvent e) {
                 // when focus is lost?
-                FileHand.saveDataToFile(FILE_NAME);
+                FileHand.saveDataToFile(Main.FILE_NAME);
                 // Save data
             }
         });
@@ -250,7 +252,7 @@ public class LIST {
 
         tableDesign();
 
-        FileHand.loadData(FILE_NAME);
+        FileHand.loadData(Main.FILE_NAME);
         // Add JTable to a scroll pane
         scrollPane = new JScrollPane(table);
         // frame.add(scrollPane, BorderLayout.CENTER);

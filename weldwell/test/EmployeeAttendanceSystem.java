@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -46,7 +47,8 @@ public class EmployeeAttendanceSystem extends JFrame {
                 String name = nameField.getText();
                 String status = (String) statusComboBox.getSelectedItem();
                 attendanceMap.put(name + " - " + dateLabel.getText(), status);
-                JOptionPane.showMessageDialog(null, "Attendance for " + name + " on " + dateLabel.getText() + " recorded as " + status);
+                JOptionPane.showMessageDialog(null,
+                        "Attendance for " + name + " on " + dateLabel.getText() + " recorded as " + status);
             }
         });
 
@@ -81,9 +83,25 @@ public class EmployeeAttendanceSystem extends JFrame {
 
         JPanel panel = new JPanel(new FlowLayout());
 
+        // Create a SpinnerDateModel with time format
+        SpinnerDateModel spinnerDateModel = new SpinnerDateModel();
+        spinnerDateModel.setCalendarField(Calendar.MINUTE); // Set to minute precision
+
+        // Create the JSpinner with the SpinnerDateModel
+        JSpinner spinner2 = new JSpinner(spinnerDateModel);
+        // Set time format to 12-hour format with AM/PM indication
+        JSpinner.DateEditor editor = new JSpinner.DateEditor(spinner2, "hh:mm a");
+        spinner2.setEditor(editor);
+
+        Date selectedDate = (Date) spinner2.getValue();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm a");
+        dateLabel.setText(dateFormat.format(selectedDate));
+
         JSpinner spinner = new JSpinner(new SpinnerDateModel());
         spinner.setEditor(new JSpinner.DateEditor(spinner, "yyyy-MM-dd"));
-        panel.add(spinner);
+        panel.add(spinner2);
+
+        
 
         JButton okButton = new JButton("OK");
         okButton.addActionListener(new ActionListener() {

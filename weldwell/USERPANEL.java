@@ -1,4 +1,5 @@
 package weldwell;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -11,7 +12,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
@@ -25,14 +28,17 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
+import javax.swing.JSpinner;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
+import javax.swing.SpinnerDateModel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.table.DefaultTableModel;
 
 // calendar
 final class MonthPanel extends JPanel {
@@ -43,9 +49,9 @@ final class MonthPanel extends JPanel {
             "August",
             "September", "October", "November", "December" };
     private static final String[] DAY_NAMES = { "S", "M", "T", "W", "T", "F", "S" };
-    private final User user;
+    private final ATTENDANCE user;
 
-    public MonthPanel(int month, int year, User user) {
+    public MonthPanel(int month, int year, ATTENDANCE user) {
         this.month = month;
         this.year = year;
         this.user = user;
@@ -136,9 +142,9 @@ public class USERPANEL extends JPanel implements Runnable {
     private JPanel userInfoSub, picturePanel, attendancePanel, printPanel, payReportPanel, salary, deductions;
 
     private MonthPanel panel;
-    private User user;
-    private Employee employee; 
-    
+    private ATTENDANCE attendance = new ATTENDANCE();
+    private Employee employee;
+
     @Override
     public void run() {
         setMonthPanel(); // Initialize the panel
@@ -150,7 +156,7 @@ public class USERPANEL extends JPanel implements Runnable {
         FileHand.loadData(Main.FILE_NAME);
         employee = FileHand.getEmployeeById("DEV001");
 
-        setMonthPanel(); 
+        setMonthPanel();
         setSize(932, 572);
         setLayout(new BorderLayout(10, 10));
 
@@ -184,7 +190,6 @@ public class USERPANEL extends JPanel implements Runnable {
         add(LOGIN.logoutPanel(logoutListener), BorderLayout.SOUTH);
     }
 
-    
     private JPanel createUserInfoPanel() {
         JPanel userInfoPanel = new JPanel();
         userInfoPanel.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED), "User Information"));
@@ -295,7 +300,13 @@ public class USERPANEL extends JPanel implements Runnable {
         calendarPanel.add(panel, BorderLayout.CENTER);
         attendancePanel.add(calendarPanel, BorderLayout.NORTH);
 
-        attendanceTable = new JTable(3, 3);
+        // Create a DefaultTableModel to hold the data for the JTable
+        DefaultTableModel model = new DefaultTableModel();
+        model.addColumn("Time In");
+        model.addColumn("Time Out");
+        model.addColumn("Overtime");
+
+        attendanceTable = new JTable(model);
         attendanceTable.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
         attendanceTable.setPreferredScrollableViewportSize(new Dimension(300, 100));
         JScrollPane sp = new JScrollPane(attendanceTable);
@@ -304,20 +315,55 @@ public class USERPANEL extends JPanel implements Runnable {
         JPanel inputPanel = new JPanel(new GridLayout(3, 2, 5, 5));
         inputPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
 
-        JLabel label_8 = new JLabel("Time In:");
-        inputPanel.add(label_8);
-        timeInField = new JTextField(10);
-        inputPanel.add(timeInField);
-
-        JLabel label_9 = new JLabel("Time Out:");
-        inputPanel.add(label_9);
-        timeOutField = new JTextField(10);
-        inputPanel.add(timeOutField);
-
+        JLabel timeInLabel = new JLabel("Time In:");
+        inputPanel.add(timeInLabel);
+        
+        // Create the SpinnerDateModel for timeInSpinner
+        SpinnerDateModel timeInSpinnerModel = new SpinnerDateModel();
+        timeInSpinnerModel.setCalendarField(Calendar.MINUTE); // Set to minute precision
+        
+        JSpinner timeInSpinner = new JSpinner(timeInSpinnerModel);
+        JSpinner.DateEditor timeInEditor = new JSpinner.DateEditor(timeInSpinner, "hh:mm a");
+        timeInSpinner.setEditor(timeInEditor);
+        inputPanel.add(timeInSpinner);
+        
+        JLabel timeOutLabel = new JLabel("Time Out:");
+        inputPanel.add(timeOutLabel);
+        
+        // Create a separate SpinnerDateModel for timeOutSpinner
+        SpinnerDateModel timeOutSpinnerModel = new SpinnerDateModel();
+        timeOutSpinnerModel.setCalendarField(Calendar.MINUTE); // Set to minute precision
+        
+        JSpinner timeOutSpinner = new JSpinner(timeOutSpinnerModel);
+        JSpinner.DateEditor timeOutEditor = new JSpinner.DateEditor(timeOutSpinner, "hh:mm a");
+        timeOutSpinner.setEditor(timeOutEditor);
+        inputPanel.add(timeOutSpinner);
+        
         overtimeCheckBox = new JCheckBox("Overtime");
         inputPanel.add(overtimeCheckBox);
 
         addAttendanceButton = new JButton("Add Attendance");
+        // Add action listener to the button to add data to the table
+        addAttendanceButton.addActionListener(e -> {
+
+            Date selectedDate = (Date) timeInSpinner.getValue();
+            SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm a");
+            String timeIn = (dateFormat.format(selectedDate));
+
+            Date selectedDate2 = (Date) timeOutSpinner.getValue();
+            SimpleDateFormat dateFormat2 = new SimpleDateFormat("hh:mm a");
+            String timeOut = (dateFormat2.format(selectedDate2));
+
+            boolean overtime = overtimeCheckBox.isSelected();
+
+            // Create an Attendance object with the entered data
+            attendance = new ATTENDANCE(timeIn, timeOut, overtime);
+
+            // Add the data to the table
+            model.addRow(new Object[] { attendance.getTimeIn(), attendance.getTimeOut(), attendance.isOvertime() });
+
+            overtimeCheckBox.setSelected(false);
+        });
         inputPanel.add(addAttendanceButton);
 
         attendancePanel.add(inputPanel, BorderLayout.SOUTH);
@@ -510,15 +556,12 @@ public class USERPANEL extends JPanel implements Runnable {
         return summary;
     }
 
-  
-
     private void setMonthPanel() {
         Calendar calendar = Calendar.getInstance();
         int year = calendar.get(Calendar.YEAR);
         int month = calendar.get(Calendar.MONTH);
-        user = new User();
-        user.setAbsent(5); // Mark the 5th day as absent
-        panel = new MonthPanel(month, year, user); // Initialize panel here
+        attendance.setAbsent(21); // Mark the 5th day as absent
+        panel = new MonthPanel(month, year, attendance); // Initialize panel here
 
     }
 

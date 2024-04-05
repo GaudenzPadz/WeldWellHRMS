@@ -131,8 +131,28 @@ class Employee {
         return absents;
     }
 
+    public int getTelNum() {
+        return telNumber;
+    }
 
-    //SETTERS
+    public int getLate() {
+        return late;
+    }
+    
+    public int getDayOff() {
+        return dayOff;
+    }
+
+    public double getOvertime() {
+        return overtime;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+
+ //SETTERS
     public void setId(String id) {
         this.id = id;
     }
@@ -189,6 +209,33 @@ class Employee {
         this.birthday = birthday;
     }
 
+    public void setAbsents(int absents) {
+        this.absents = absents;
+    }
+
+    public void setLate(int late) {
+        this.late = late;
+    }
+
+    public void setDayOff(int dayOff) {
+        this.dayOff = dayOff;
+    }
+
+
+    public void setOvertime(double overtime) {
+        this.overtime = overtime;
+    }
+
+
+    public void setTelNUmber(int telNumber) {
+        this. telNumber = telNumber;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+//Add method
     public void addAllowance(String allowance) {
         this.allowances.add(allowance);
     }
@@ -196,54 +243,6 @@ class Employee {
     public void addDeduction(String deduction) {
         this.deductions.add(deduction);
     }
-
-    
-    public void setAbsents(int absents) {
-        this.absents = absents;
-    }
-
-    public int getLate() {
-        return late;
-    }
-
-    public void setLate(int late) {
-        this.late = late;
-    }
-
-    public int getDayOff() {
-        return dayOff;
-    }
-
-    public void setDayOff(int dayOff) {
-        this.dayOff = dayOff;
-    }
-
-    public double getOvertime() {
-        return overtime;
-    }
-
-    public void setOvertime(double overtime) {
-        this.overtime = overtime;
-    }
-
-    
-    //Telephone number setters and getters
-    public int getTelNum() {
-        return telNumber;
-    }
-
-    public void setTelNUmber(int telNumber) {
-        this. telNumber = telNumber;
-    }
-    //email getters and setters
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
     // Method to calculate deductions
     public double calculateDeductions(double grossPay) {
         double sssDeduction = grossPay * getSSS();

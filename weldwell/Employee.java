@@ -28,6 +28,8 @@ class Employee {
     private double SSS;
     private double PAG_IBIG;
     private double PHILHEALTH;
+    private int telNumber;
+    private String email;
 
     // Constants for work types and their corresponding wage per day
     private double SMAW_WAGE = 500;
@@ -47,7 +49,11 @@ class Employee {
         this.grossPay = grossPay;
         this.netPay = netPay;
         this.gender = gender;
-       // this.middleName = middleName;
+        this.email = email;
+        this.middleName = middleName;
+
+        // GAGO tite 
+        this.telNumber = telNumber;
 
         // not intialize (late nalang)
         this.allowances = new ArrayList<>();
@@ -58,139 +64,140 @@ class Employee {
         this.overtime = 0.0;
     }
 
-    // Getters and setters
+    // GETTERS
     public String getId() {
         return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public String getFirstName() {
         return firstName;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
     public String getMiddleName() {
         return middleName;
     }
-
-    public void setMiddleName(String middleName) {
-        this.middleName= middleName;
-    }
-
     public String getLastName() {
         return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
     }
 
     public String getAddress() {
         return address;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
     public String getWorkType() {
         return workType;
     }
-
-    public void setWorkType(String workType) {
-        this.workType = workType;
-    }
-
+ 
     public double getRate() {
         return rate;
     }
 
-    public void setRate(double rate) {
-        this.rate = rate;
+    public String getGender() {
+        return gender;
     }
-
+    
     public double getGrossPay() {
         return grossPay;
-    }
-
-    public void setGrossPay(double grossPay) {
-        this.grossPay = grossPay;
     }
 
     public double getNetPay() {
         return netPay;
     }
 
-    public void setNetPay(double netPay) {
-        this.netPay = netPay;
-    }
-
-    public String getGender() {
-        return gender;
-    }
-
-    public void setGender(String gender) {
-        this.gender = gender;
-    }
-
     public double getPAG_IBIG() {
         return PAG_IBIG;
-    }
-
-    public void setPAG_IBIG(double PAG_IBIG) {
-        this.PAG_IBIG = PAG_IBIG;
     }
 
     public double getSSS() {
         return SSS;
     }
 
-    public void setSSS(double SSS) {
-        this.SSS = SSS;
-    }
-
     public double getPHILHEALTH() {
         return PHILHEALTH;
     }
-
-    public void setPHILHEALTH(double PHILHEALTH) {
-        this.PHILHEALTH = PHILHEALTH;
-    }
-
     public String getbirthday() {
         return birthday;
-    }
-
-    public void setbirthday(String birthday) {
-        this.birthday = birthday;
     }
 
     public ArrayList<String> getAllowances() {
         return allowances;
     }
 
-    public void addAllowance(String allowance) {
-        this.allowances.add(allowance);
-    }
-
     public ArrayList<String> getDeductions() {
         return deductions;
-    }
-
-    public void addDeduction(String deduction) {
-        this.deductions.add(deduction);
     }
 
     public int getAbsents() {
         return absents;
     }
 
+
+    //SETTERS
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public void setMiddleName(String middleName) {
+        this.middleName = middleName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+    
+    public void setWorkType(String workType) {
+        this.workType = workType;
+    }
+   
+    public void setRate(double rate) {
+        this.rate = rate;
+    }
+
+    public void setGrossPay(double grossPay) {
+        this.grossPay = grossPay;
+    }
+
+    public void setNetPay(double netPay) {
+        this.netPay = netPay;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public void setPAG_IBIG(double PAG_IBIG) {
+        this.PAG_IBIG = PAG_IBIG;
+    }
+
+    public void setSSS(double SSS) {
+        this.SSS = SSS;
+    }
+
+    public void setPHILHEALTH(double PHILHEALTH) {
+        this.PHILHEALTH = PHILHEALTH;
+    }
+
+    public void setbirthday(String birthday) {
+        this.birthday = birthday;
+    }
+
+    public void addAllowance(String allowance) {
+        this.allowances.add(allowance);
+    }
+
+    public void addDeduction(String deduction) {
+        this.deductions.add(deduction);
+    }
+
+    
     public void setAbsents(int absents) {
         this.absents = absents;
     }
@@ -217,6 +224,24 @@ class Employee {
 
     public void setOvertime(double overtime) {
         this.overtime = overtime;
+    }
+
+    
+    //Telephone number setters and getters
+    public int getTelNum() {
+        return telNumber;
+    }
+
+    public void setTelNUmber(int telNumber) {
+        this. telNumber = telNumber;
+    }
+    //email getters and setters
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     // Method to calculate deductions
@@ -303,5 +328,7 @@ class Employee {
     public static ArrayList<Employee> getEmployees() {
         return employees;
     }
+
+    
 
 }
